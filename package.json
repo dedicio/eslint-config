@@ -1,0 +1,39 @@
+{
+  "name": "eslint-config-dedicio",
+  "version": "1.0.1",
+  "description": "My personal ESLint config for JavaScript and Vue.js projects",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./vue": "./js-vue.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --report-unused-disable-directives .",
+    "lint:fix": "eslint --fix --report-unused-disable-directives ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dedicio/eslint-config"
+  },
+  "keywords": [
+    "eslint",
+    "eslint-config",
+    "eslint-vue",
+    "javascript",
+    "vue"
+  ],
+  "author": "Dedicio Coelho <dev@dedicio.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dedicio/eslint-config/issues"
+  },
+  "homepage": "https://github.com/dedicio/eslint-config#readme",
+  "peerDependencies": {
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-vue": "^9.19.2"
+  }
+}
