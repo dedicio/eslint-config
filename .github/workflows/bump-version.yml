@@ -1,6 +1,8 @@
 name: Bump Version and Create Tag
 on:
   push:
+    branches:
+      - main
 
 jobs:
   bump-version:
