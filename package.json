@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-dedicio",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "description": "My personal ESLint config for JavaScript and Vue.js projects",
   "main": "index.js",
   "exports": {
