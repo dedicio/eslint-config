@@ -1,0 +1,16 @@
+name: Bump Version and Create Tag
+on:
+  push:
+    # branches:
+    #   - main
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Bumping version
+        uses: jpb06/bump-package@latest
