@@ -1,12 +1,13 @@
 name: Bump Version and Create Tag
 on:
   push:
-    branches:
-      - main
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
