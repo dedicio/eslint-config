@@ -1,16 +1,23 @@
 name: Bump Version and Create Tag
 on:
   push:
-    # branches:
-    #   - main
+    branches:
+      - main
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Bumping version
-        uses: jpb06/bump-package@latest
+      - name:  'Automated Version Bump'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag-prefix:  'v'
