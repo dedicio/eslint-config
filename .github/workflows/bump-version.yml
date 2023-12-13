@@ -1,4 +1,31 @@
+# name: Bump Version and Create Tag
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   bump-version:
+#     runs-on: ubuntu-latest
+
+#     permissions:
+#       contents: write
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name:  'Automated Version Bump'
+#         uses:  'phips28/gh-action-bump-version@master'
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           tag-prefix:  'v'
+
+
+
 name: Bump Version and Create Tag
+
 on:
   push:
     branches:
@@ -15,9 +42,40 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name:  'Automated Version Bump'
-        uses:  'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get current version
+        id: get-version
+        run: echo "::set-output name=version::$(node -p -e "require('./package.json').version")"
+
+      - name: Bump version
+        id: bump-version
+        run: echo "::set-output name=new-version::$(npm version patch)"
+
+      - name: Create branch
+        run: git checkout -b ${{ steps.bump-version.outputs.new-version }}
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
         with:
-          tag-prefix:  'v'
+          branch: ${{ steps.bump-version.outputs.new-version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create pull request
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.bump-version.outputs.new-version }}
+          title: "Bump version to ${{ steps.bump-version.outputs.new-version }}"
+          body: "This pull request bumps the version to ${{ steps.bump-version.outputs.new-version }}"
+      - name: Approve Pull Request
+        uses: juliangruber/approve-pull-request-action@v2.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+      - name: Merge Pull Request
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+          method: squash
+          repo: dedicio/eslint-config
