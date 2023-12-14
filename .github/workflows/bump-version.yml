@@ -44,11 +44,11 @@ jobs:
 
       - name: Get current version
         id: get-version
-        run: echo "{version}=$(node -p -e "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: echo "version=$(node -p -e "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Bump version
         id: bump-version
-        run: echo "{new-version}=$(npm version patch)" >> $GITHUB_OUTPUT
+        run: echo "new-version=$(npm version patch)" >> $GITHUB_OUTPUT
 
       - name: Create branch
         run: git checkout -b ${{ steps.bump-version.outputs.new-version }}
