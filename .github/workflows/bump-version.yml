@@ -48,7 +48,10 @@ jobs:
 
       - name: Bump version
         id: bump-version
-        run: echo "new-version=$(npm version patch)" >> $GITHUB_OUTPUT
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          echo "new-version=$(npm version patch)" >> $GITHUB_OUTPUT
 
       - name: Create branch
         run: git checkout -b ${{ steps.bump-version.outputs.new-version }}
