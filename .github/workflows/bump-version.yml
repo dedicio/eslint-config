@@ -53,14 +53,14 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           echo "new-version=$(npm version patch)" >> $GITHUB_OUTPUT
 
-      - name: Create branch
-        run: git checkout -b release-${{ steps.bump-version.outputs.new-version }}
+      # - name: Create branch
+      #   run: git checkout -b release-${{ steps.bump-version.outputs.new-version }}
 
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          branch: release-${{ steps.bump-version.outputs.new-version }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Push changes
+      #   uses: ad-m/github-push-action@master
+      #   with:
+      #     branch: release-${{ steps.bump-version.outputs.new-version }}
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create pull request
         id: create-pull-request
