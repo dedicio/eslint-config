@@ -54,12 +54,12 @@ jobs:
           echo "new-version=$(npm version patch)" >> $GITHUB_OUTPUT
 
       - name: Create branch
-        run: git checkout -b ${{ steps.bump-version.outputs.new-version }}
+        run: git checkout -b release-${{ steps.bump-version.outputs.new-version }}
 
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          branch: ${{ steps.bump-version.outputs.new-version }}
+          branch: release-${{ steps.bump-version.outputs.new-version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create pull request
@@ -67,7 +67,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ steps.bump-version.outputs.new-version }}
+          branch: release-${{ steps.bump-version.outputs.new-version }}
           title: "Bump version to ${{ steps.bump-version.outputs.new-version }}"
           body: "This pull request bumps the version to ${{ steps.bump-version.outputs.new-version }}"
       - name: Approve Pull Request
