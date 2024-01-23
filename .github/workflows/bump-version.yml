@@ -62,25 +62,41 @@ jobs:
           branch: release-${{ steps.bump-version.outputs.new-version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create pull request
-        id: create-pull-request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Bump version to ${{ steps.bump-version.outputs.new-version }}"
-          body: "This pull request bumps the version to ${{ steps.bump-version.outputs.new-version }}"
-          branch: release-${{ steps.bump-version.outputs.new-version }}
-          base: main
-          delete-branch: true
-      - name: Approve Pull Request
-        uses: juliangruber/approve-pull-request-action@v2.0.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+      # - name: Create pull request
+      #   id: create-pull-request
+      #   uses: peter-evans/create-pull-request@v5
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     title: "Bump version to ${{ steps.bump-version.outputs.new-version }}"
+      #     body: "This pull request bumps the version to ${{ steps.bump-version.outputs.new-version }}"
+      #     branch: release-${{ steps.bump-version.outputs.new-version }}
+      #     base: main
+      #     delete-branch: true
+      - name: Create Pull Request
+        run: |
+          prCreated="$(gh pr create \
+            -B main \
+            -H release-${{ steps.bump-version.outputs.new-version }} \
+            --title 'Merge release-${{ steps.bump-version.outputs.new-version }} into main' \
+            --body 'Created by Github action')"
+          
+          echo 'PR_CREATED='$prCreated >> $GITHUB_ENV
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Approve Pull Request
+      #   uses: juliangruber/approve-pull-request-action@v2.0.0
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+      # - name: Merge Pull Request
+      #   uses: juliangruber/merge-pull-request-action@v1
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+      #     method: squash
+      #     repo: dedicio/eslint-config
       - name: Merge Pull Request
-        uses: juliangruber/merge-pull-request-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-          method: squash
-          repo: dedicio/eslint-config
+        run: |
+          gh pr merge $PR_CREATED --admin --squash --auto --delete
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
