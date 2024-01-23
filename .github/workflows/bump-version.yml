@@ -99,6 +99,6 @@ jobs:
       #     repo: dedicio/eslint-config
       - name: Merge Pull Request
         run: |
-          gh pr merge $PR_CREATED --admin --squash --auto --delete-branch
+          gh pr merge $PR_CREATED --admin --squash --delete-branch
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
